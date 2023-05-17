@@ -1,0 +1,12 @@
+ANOTACIONES SPRING WEB / REST
+@RequestMapping -- Asociar una URL a un método o clase
+@GetMapping ---- Asociar una peticion HTTP GET
+@PostMapping ---- Asociar una peticion HTTP POST
+@PathVariable -- Para cargar una parte variable de la URL en un objeto
+@RequestParam -- Para cargar un parámetros de la URL en un objeto
+@RequestBody -- Convierte el cuerpo del HTTP en un objeto (deserializar)
+"Estereotipo" - id el rol de clase
+@Controller - recibir y devolver HTTP
+@RestController - - recibir y devolver HTTP de JSON
+@Service - Clase de Servicio - negocio
+@Repository - CLase de acceso a base de datos
