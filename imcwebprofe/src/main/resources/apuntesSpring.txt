@@ -10,3 +10,10 @@ ANOTACIONES SPRING WEB / REST
 @RestController - - recibir y devolver HTTP de JSON
 @Service - Clase de Servicio - negocio
 @Repository - CLase de acceso a base de datos
+
+
+
+CLASES IMPORTANTES DEL FRAMEWORK
+
+ResponseEntity --> Esta clase, representa el mensaje HTTP de Respuesta/ voy a poder manipular cuerpo y cabecera 
+es el "HttpServletResponse" de Spring

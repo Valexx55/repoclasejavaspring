@@ -1,4 +1,10 @@
-package edu.cas.imcweb.repository.entity;
+package edu.cas.imcwebprofe.repository.entity;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 //ENTIDAD --> RELACIÓN CON LA BD
 //CLASE ENTITY --> ASOCIADA A UNA TABLA
@@ -6,11 +12,19 @@ package edu.cas.imcweb.repository.entity;
 
 //JPA - HIBERNATE
 //HIBERNATE - ORM Object Relational Mapping - Forma de Relacionar Clases con Tablas de la base de datos
+
+@Entity //esta clase, está asociada a una tabla
+@Table(name = "pacientes") //el nombre de la tabla a la que se asocia esta clase
 public class Paciente {
 	
+	@Id //este campo, es la clave primaria, Primary Key
+	@GeneratedValue(strategy = GenerationType.IDENTITY)//autoinc en MYSQL
 	private int id;
-	private String nombre;
-	private int edad;
+	
+	//@Column(name = "nombre_paciente")
+	
+	private String nombre;//estos 2 campos, estarán asociados a 
+	private int edad;//columnas del mismo nombre en la tabla pacientes
 	
 	public int getId() {
 		return id;
