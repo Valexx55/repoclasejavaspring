@@ -1,7 +1,10 @@
 package edu.cas.imcwebprofe.controller;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.cas.imcwebprofe.repository.entity.Paciente;
+import edu.cas.imcwebprofe.service.PacienteService;
+import edu.cas.imcwebprofe.service.PacienteServiceImpl;
 
 
 //ESTA ES LA CAPA "SERVLETS"
@@ -34,17 +39,31 @@ import edu.cas.imcwebprofe.repository.entity.Paciente;
 public class PacienteController {
 	
 	
+	@Autowired
+	PacienteService pacienteService;
+	
 	//CONUSLTA DE TODOS LOS PANCIENTES GET -->  GET http://localhost:8081/paciente
 	@GetMapping
 	ResponseEntity<?> obtenerTodosLosPacientes ()
 	{
 		ResponseEntity<?> responseEntity = null;
+		Iterable<Paciente> listaPaciente = null;
 		
-			List<Paciente> lista_p= List.of(new Paciente(5l, "Sheila", 48), new Paciente(5l, "Sheila", 48), new Paciente(5l, "Sheila", 48));
-			responseEntity = ResponseEntity.ok(lista_p);
+			listaPaciente=this.pacienteService.consultarTodos();
+			responseEntity = ResponseEntity.ok(listaPaciente);
 		
 		return responseEntity;
 	}
+	
+	
+	//optionalPaciente.isEmpty()== true //no hay paciente
+	
+	//SI HA RECUPERADO UN PACIENTE CON ESE ID,
+		//LE DEVUELVO EL PACIENTE Y UN 200
+	//SI NO ESTÁL
+		//EL CUERPO IRÁ VACÍA
+		//STATUS 404 / 400 / 204 no content
+	
 	
 	
 	//CONUSLTA DE UN PACIENTE GET  --> GET http://localhost:8081/paciente/59
@@ -52,8 +71,17 @@ public class PacienteController {
 	ResponseEntity<?> obtenerPacientePorId (@PathVariable Long id)
 	{
 		ResponseEntity<?> responseEntity = null;
+		Optional<Paciente> optionalPaciente = null;
 		
-		
+			optionalPaciente = this.pacienteService.consultarPacientePorId(id);
+			if (optionalPaciente.isPresent())
+			{
+				Paciente pacienteLeido =  optionalPaciente.get();
+				responseEntity = ResponseEntity.ok(pacienteLeido);
+			} else {
+				responseEntity = ResponseEntity.noContent().build();//Build the response entity with no body.
+			}
+			
 		return responseEntity;
 	}
 	
@@ -64,18 +92,24 @@ public class PacienteController {
 	{
 		ResponseEntity<?> responseEntity = null;
 		
+				this.pacienteService.borrarPacientePorId(id);
+				responseEntity = ResponseEntity.ok().build();
 		
 		return responseEntity;
 	}
 	
 	
 	
-	//ALTA POST --> POST http://localhost:8081/paciente body {JSON paciente con los datos del paciente a insertar}
+	//ALTA POST --> POST http://localhost:8081/paciente body {JSON paciente con los datos del paciente a insertar} BIND" cargar atributos JSON a las propiedades JAVA (set)
 	@PostMapping
 	ResponseEntity<?> insertarPaciente (@RequestBody Paciente paciente)
 	{
 		ResponseEntity<?> responseEntity = null;
+		Paciente pacienteNuevo = null;
 		
+			pacienteNuevo = this.pacienteService.insertarPaciente(paciente);
+			responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(pacienteNuevo);
+			
 		
 		return responseEntity;
 	}

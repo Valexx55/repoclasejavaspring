@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import edu.cas.imcwebprofe.repository.PacienteRepository;
 import edu.cas.imcwebprofe.repository.entity.Paciente;
@@ -24,7 +25,14 @@ public class PacienteServiceImpl implements PacienteService{
 	 * metemos en la instancia de servicio, la instancia de repositorio (propiedad)
 	 */
 	
+	//IDEA Transacción - Conversación
+	//comprarBillete
+		//marcar el Asiento rservado
+		//hacer un apunte contable
+		//pago 
+	
 	@Override
+	@Transactional(readOnly = true) //permitiendo acceso concurrente a la tabla - Operaciones de consulta
 	public Iterable<Paciente> consultarTodos() {
 		
 		Iterable<Paciente> listaPacientes = null;
@@ -33,8 +41,10 @@ public class PacienteServiceImpl implements PacienteService{
 		
 		return listaPacientes;
 	}
+	
 
 	@Override
+	@Transactional(readOnly = true)
 	public Optional<Paciente> consultarPacientePorId(Long id) {
 		Optional<Paciente> optionalPaciente = null;
 		
@@ -44,6 +54,7 @@ public class PacienteServiceImpl implements PacienteService{
 	}
 
 	@Override
+	@Transactional
 	public void borrarPacientePorId(Long id) {
 		
 		this.pacienteRepository.deleteById(id);
@@ -52,6 +63,7 @@ public class PacienteServiceImpl implements PacienteService{
 
 
 	@Override
+	@Transactional
 	public Paciente insertarPaciente(Paciente paciente) {
 		Paciente pacienteNuevo = null;
 			
@@ -61,6 +73,7 @@ public class PacienteServiceImpl implements PacienteService{
 	}
 	
 	@Override
+	@Transactional
 	public Optional<Paciente> modificarPaciente(Paciente paciente, Long id) {
 		// TODO Auto-generated method stub
 		return null;

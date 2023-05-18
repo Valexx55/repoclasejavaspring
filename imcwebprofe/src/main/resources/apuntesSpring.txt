@@ -13,7 +13,10 @@ ANOTACIONES SPRING WEB / REST
 //estas anotaciones, irían en el main/clase de Configuración
 @EntityScan("edu.cas.imcweb.respository")//Las entitys "clases-tabla" las tienes que buscar en este paquete
 @ComponentScan({"edu.cas.imcweb.componentes", "edu.cas.imcweb.servicios"})//Los componentes (servico, repository o controller)  las tienes que buscar en este paquete
-
+@Transactional - antes del metodo inicia la conexión y después, si ha ido bien, hace el commit (confirmarlo )automáticamente
+				 si algo falla, hace el rollback (deshace los cambios)
+				 
+				 para identificar los métodos o las clases/servicios que interactúan con la base de datos
 
 
 CLASES IMPORTANTES DEL FRAMEWORK
