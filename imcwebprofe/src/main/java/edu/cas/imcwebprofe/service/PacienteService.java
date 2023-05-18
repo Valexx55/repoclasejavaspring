@@ -1,5 +1,10 @@
 package edu.cas.imcwebprofe.service;
 
+import java.util.Optional;
+
+import org.springframework.expression.spel.ast.OpAnd;
+
+import edu.cas.imcwebprofe.repository.entity.Paciente;
 
 //AQUÍ DEFINIMOS LA OPERATIVA
 //LA FUNCIONALDIAD DE LA APLICAICÓN
@@ -7,7 +12,18 @@ package edu.cas.imcwebprofe.service;
 //ALTA
 //BAJA
 //MODICACIÓN
-//CONSULTA
+//CONSULTA por iD
+//Consuta todos
 public interface PacienteService {
+	
+	Iterable<Paciente> consultarTodos ();
+	
+	Optional<Paciente> consultarPacientePorId (Long id);
+	
+	void borrarPacientePorId (Long id);
+	
+	Optional<Paciente> modificarPaciente (Paciente paciente, Long id);
+	
+	Paciente insertarPaciente (Paciente paciente);
 
 }

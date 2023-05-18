@@ -10,6 +10,9 @@ ANOTACIONES SPRING WEB / REST
 @RestController - - recibir y devolver HTTP de JSON
 @Service - Clase de Servicio - negocio
 @Repository - CLase de acceso a base de datos
+//estas anotaciones, irían en el main/clase de Configuración
+@EntityScan("edu.cas.imcweb.respository")//Las entitys "clases-tabla" las tienes que buscar en este paquete
+@ComponentScan({"edu.cas.imcweb.componentes", "edu.cas.imcweb.servicios"})//Los componentes (servico, repository o controller)  las tienes que buscar en este paquete
 
 
 
@@ -17,3 +20,13 @@ CLASES IMPORTANTES DEL FRAMEWORK
 
 ResponseEntity --> Esta clase, representa el mensaje HTTP de Respuesta/ voy a poder manipular cuerpo y cabecera 
 es el "HttpServletResponse" de Spring
+
+
+COMPORTAMIENTO FRAMEWORK
+
+Cuando Spring inicia, busca las clases de configuración
+tienen una anotación especial
+@Configuration, @Components (Service, Controller, Repository)
+@Entity
+El directorio raíz/paquete de la aplicación
+ edu.cas.imcwebprofe a partir de donde busca Spring
