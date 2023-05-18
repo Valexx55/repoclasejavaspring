@@ -19,17 +19,17 @@ public class Paciente {
 	
 	@Id //este campo, es la clave primaria, Primary Key
 	@GeneratedValue(strategy = GenerationType.IDENTITY)//autoinc en MYSQL
-	private int id;
+	private Long id;
 	
 	//@Column(name = "nombre_paciente")
 	
 	private String nombre;//estos 2 campos, estarán asociados a 
 	private int edad;//columnas del mismo nombre en la tabla pacientes
 	
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getNombre() {
@@ -44,7 +44,7 @@ public class Paciente {
 	public void setEdad(int edad) {
 		this.edad = edad;
 	}
-	public Paciente(int id, String nombre, int edad) {
+	public Paciente(Long id, String nombre, int edad) {
 		super();
 		this.id = id;
 		this.nombre = nombre;

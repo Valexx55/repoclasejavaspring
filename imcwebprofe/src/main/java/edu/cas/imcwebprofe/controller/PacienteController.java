@@ -40,7 +40,7 @@ public class PacienteController {
 	{
 		ResponseEntity<?> responseEntity = null;
 		
-			List<Paciente> lista_p= List.of(new Paciente(5, "Sheila", 48), new Paciente(5, "Sheila", 48), new Paciente(5, "Sheila", 48));
+			List<Paciente> lista_p= List.of(new Paciente(5l, "Sheila", 48), new Paciente(5l, "Sheila", 48), new Paciente(5l, "Sheila", 48));
 			responseEntity = ResponseEntity.ok(lista_p);
 		
 		return responseEntity;
@@ -98,7 +98,7 @@ public class PacienteController {
 	public Paciente obtenerPacienteTest() {
 		Paciente paciente = null;
 
-		paciente = new Paciente(5, "Sheila", 48);
+		paciente = new Paciente(5l, "Sheila", 48);
 
 		return paciente;
 	}
@@ -111,7 +111,7 @@ public class PacienteController {
 		Paciente paciente = null;
 
 		System.out.println("ID Paciente recibido = " + idpaciente);
-		paciente = new Paciente(5, "Sheila", 48);
+		paciente = new Paciente(5l, "Sheila", 48);
 
 		return paciente;
 	}
@@ -121,7 +121,7 @@ public class PacienteController {
 		Paciente paciente = null;
 
 		System.out.println("ID Paciente recibido = " + id);
-		paciente = new Paciente(5, "Sheila", 48);
+		paciente = new Paciente(5l, "Sheila", 48);
 
 		return paciente;
 	}
