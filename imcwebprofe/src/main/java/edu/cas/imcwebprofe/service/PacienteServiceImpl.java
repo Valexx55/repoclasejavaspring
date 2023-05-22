@@ -2,6 +2,7 @@ package edu.cas.imcwebprofe.service;
 
 import java.util.Optional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,8 +76,27 @@ public class PacienteServiceImpl implements PacienteService{
 	@Override
 	@Transactional
 	public Optional<Paciente> modificarPaciente(Paciente paciente, Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		Optional<Paciente> optionalPaciente = Optional.empty();//"me creo el huevo vacío"
+		
+				//1 leer
+				optionalPaciente =  this.pacienteRepository.findById(id);
+				if (optionalPaciente.isPresent())
+				{
+					Paciente pacienteLeido = optionalPaciente.get();//en este momento, este paciente sí está asociado a un registro de la tabla
+					//actualizar las propiedades //en estado de Persitente. Si yo modifico un atributo, estoy modificando la columna asociada
+					
+					BeanUtils.copyProperties(paciente, pacienteLeido, "id");
+					//void org.springframework.beans.BeanUtils.copyProperties(Object source, Object target, String... ignoreProperties) throws BeansException
+					
+					//pacienteLeido.setNombre(paciente.getNombre());
+					//pacienteLeido.setEdad(paciente.getEdad()); //HIBERNATE JPA
+					
+					optionalPaciente = Optional.of(pacienteLeido);
+					//this.pacienteRepository.save(pacienteLeido); //no es necesario, ya que pacienteLeido está en Persisnte (dentro de una conexion @Transactional)
+				}
+				//2 modificar
+		
+		return optionalPaciente;
 	}
 
 }

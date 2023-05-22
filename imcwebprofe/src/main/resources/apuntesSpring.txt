@@ -33,3 +33,10 @@ tienen una anotación especial
 @Entity
 El directorio raíz/paquete de la aplicación
  edu.cas.imcwebprofe a partir de donde busca Spring
+ 
+ESTADOS DE UNA ENTIDAD
+Transient - El objeto no guarda relación con la base de datos (Contexto de Persistencia de Hibernate)
+Persistent - El objeto sí está asociado a un registro (Contexto de Persistencia de Hibernate)- Transactional- 
+			Si modifico un atributo, estoy moficando la columna de la tabla
+			
+... varargs número de argumentos variables (en realidad, un array)

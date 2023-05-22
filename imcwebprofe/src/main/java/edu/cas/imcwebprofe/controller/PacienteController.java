@@ -120,7 +120,19 @@ public class PacienteController {
 	ResponseEntity<?> modificarPaciente (@RequestBody Paciente paciente, @PathVariable Long id)
 	{
 		ResponseEntity<?> responseEntity = null;
+		Optional<Paciente> optionalPaciente = null;
 		
+			optionalPaciente = 	this.pacienteService.modificarPaciente(paciente, id);
+			//si lo ha podido modifcar, 200 OK + el paciente modificado
+			if (optionalPaciente.isPresent())
+			{
+				Paciente pacienteModificado = optionalPaciente.get();
+				responseEntity = ResponseEntity.ok(pacienteModificado);
+			} else {
+				//si no 404 notFound y el body vacío
+				responseEntity = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			}
+				
 		
 		return responseEntity;
 	}
@@ -132,7 +144,9 @@ public class PacienteController {
 	public Paciente obtenerPacienteTest() {
 		Paciente paciente = null;
 
-		paciente = new Paciente(5l, "Sheila", 48);
+		paciente = new Paciente(5l, "Sheila", 48); //Este objeto, tiene relación con la base de datos?
+		//En este momento, este objeto no guarda relación con la base de datos --> Transient
+		paciente.setEdad(43);//modifico la propiedad/atributo no una columna
 
 		return paciente;
 	}
