@@ -1,11 +1,16 @@
 package edu.cas.imcwebprofe.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -99,16 +104,38 @@ public class PacienteController {
 	}
 	
 	
+	private ResponseEntity<?> generarRespuestaConErrroesValidacion(BindingResult bindingResult) {
+		ResponseEntity<?> responseEntity = null;
+		List<ObjectError> listaErrores = null;
+			
+			listaErrores = bindingResult.getAllErrors();
+			responseEntity = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(listaErrores);
+		
+		return responseEntity;
+	}
 	
 	//ALTA POST --> POST http://localhost:8081/paciente body {JSON paciente con los datos del paciente a insertar} BIND" cargar atributos JSON a las propiedades JAVA (set)
 	@PostMapping
-	ResponseEntity<?> insertarPaciente (@RequestBody Paciente paciente)
+	ResponseEntity<?> insertarPaciente (@Valid @RequestBody Paciente paciente, BindingResult bindingResult)
 	{
 		ResponseEntity<?> responseEntity = null;
 		Paciente pacienteNuevo = null;
 		
-			pacienteNuevo = this.pacienteService.insertarPaciente(paciente);
-			responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(pacienteNuevo);
+			//Valido Paciente
+			//si es valido, inserto
+				//si no le contesto con error
+		
+			if (bindingResult.hasErrors())
+			{
+				//el paciente NO es valido -400
+				responseEntity = generarRespuestaConErrroesValidacion(bindingResult);
+				//responseEntity = //ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			} else {
+				//paciente OK
+				pacienteNuevo = this.pacienteService.insertarPaciente(paciente);
+				responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(pacienteNuevo);
+			}
+			
 			
 		
 		return responseEntity;
@@ -144,10 +171,11 @@ public class PacienteController {
 	public Paciente obtenerPacienteTest() {
 		Paciente paciente = null;
 
-		paciente = new Paciente(5l, "Sheila", 48); //Este objeto, tiene relación con la base de datos?
+		//paciente = new Paciente(5l, "Sheila", 48); //Este objeto, tiene relación con la base de datos?
 		//En este momento, este objeto no guarda relación con la base de datos --> Transient
-		paciente.setEdad(43);//modifico la propiedad/atributo no una columna
+		//paciente.setEdad(43);//modifico la propiedad/atributo no una columna
 
+		paciente = new Paciente(1l, "Antonio", 30, LocalDateTime.now(), "antonio@porquenotecalles.es", "Lopez");
 		return paciente;
 	}
 	
