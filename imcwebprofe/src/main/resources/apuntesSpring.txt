@@ -40,3 +40,6 @@ Persistent - El objeto sí está asociado a un registro (Contexto de Persistenci
 			Si modifico un atributo, estoy moficando la columna de la tabla
 			
 ... varargs número de argumentos variables (en realidad, un array)
+
+BEAN VALIDATION
+ Estándar de Java (especificación)

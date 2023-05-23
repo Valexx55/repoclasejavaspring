@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import edu.cas.imcwebprofe.repository.entity.Paciente;
 import edu.cas.imcwebprofe.service.PacienteService;
 import edu.cas.imcwebprofe.service.PacienteServiceImpl;
+import io.swagger.v3.oas.annotations.Operation;
 
 
 //ESTA ES LA CAPA "SERVLETS"
@@ -49,7 +50,7 @@ public class PacienteController {
 	
 	//CONUSLTA DE TODOS LOS PANCIENTES GET -->  GET http://localhost:8081/paciente
 	@GetMapping
-	ResponseEntity<?> obtenerTodosLosPacientes ()
+	public ResponseEntity<?> obtenerTodosLosPacientes ()
 	{
 		ResponseEntity<?> responseEntity = null;
 		Iterable<Paciente> listaPaciente = null;
@@ -69,11 +70,9 @@ public class PacienteController {
 		//EL CUERPO IRÁ VACÍA
 		//STATUS 404 / 400 / 204 no content
 	
-	
-	
 	//CONUSLTA DE UN PACIENTE GET  --> GET http://localhost:8081/paciente/59
 	@GetMapping("/{id}")
-	ResponseEntity<?> obtenerPacientePorId (@PathVariable Long id)
+	public ResponseEntity<?> obtenerPacientePorId (@PathVariable Long id)
 	{
 		ResponseEntity<?> responseEntity = null;
 		Optional<Paciente> optionalPaciente = null;
@@ -93,7 +92,7 @@ public class PacienteController {
 	
 	//BAJA DELETE --> DELETE http://localhost:8081/paciente/1
 	@DeleteMapping("/{id}")
-	ResponseEntity<?> borrarPacientePorId (@PathVariable Long id)
+	public ResponseEntity<?> borrarPacientePorId (@PathVariable Long id)
 	{
 		ResponseEntity<?> responseEntity = null;
 		
@@ -115,8 +114,9 @@ public class PacienteController {
 	}
 	
 	//ALTA POST --> POST http://localhost:8081/paciente body {JSON paciente con los datos del paciente a insertar} BIND" cargar atributos JSON a las propiedades JAVA (set)
+	@Operation(description = "Subimos un cliente nuevo")
 	@PostMapping
-	ResponseEntity<?> insertarPaciente (@Valid @RequestBody Paciente paciente, BindingResult bindingResult)
+	public ResponseEntity<?> insertarPaciente (@Valid @RequestBody Paciente paciente, BindingResult bindingResult)
 	{
 		ResponseEntity<?> responseEntity = null;
 		Paciente pacienteNuevo = null;
@@ -144,7 +144,7 @@ public class PacienteController {
 	
 	//MODIFICACIÓN PUT --> DELETE http://localhost:8081/paciente/1 body {paciente con los datos nuevos JSON}
 	@PutMapping("/{id}")
-	ResponseEntity<?> modificarPaciente (@RequestBody Paciente paciente, @PathVariable Long id)
+	public ResponseEntity<?> modificarPaciente (@RequestBody Paciente paciente, @PathVariable Long id)
 	{
 		ResponseEntity<?> responseEntity = null;
 		Optional<Paciente> optionalPaciente = null;
