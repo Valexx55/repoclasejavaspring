@@ -54,6 +54,8 @@ public class PacienteServiceImpl implements PacienteService{
 		return optionalPaciente;
 	}
 
+	
+	
 	@Override
 	@Transactional
 	public void borrarPacientePorId(Long id) {
@@ -61,7 +63,7 @@ public class PacienteServiceImpl implements PacienteService{
 		this.pacienteRepository.deleteById(id);
 		
 	}
-
+	
 
 	@Override
 	@Transactional
