@@ -186,5 +186,18 @@ public class PacienteController {
 
 		return paciente;
 	}
+	
+	//GET http://localhost:8081/paciente/conusltar-por-edad/5/50
+	@GetMapping("/conusltar-por-edad/{edadmin}/{edadmax}")
+	public ResponseEntity<?> obtenerPacientesPorRangoDeEdad(@PathVariable int edadmin, @PathVariable int edadmax) {
+		ResponseEntity<?> responseEntity = null;
+		Iterable<Paciente> listaPacientes = null;
+
+			listaPacientes = this.pacienteService.consultarPacientesPorRangoEdad(edadmin, edadmax);
+			responseEntity = ResponseEntity.ok(listaPacientes);
+	
+
+		return responseEntity;
+	}
 
 }

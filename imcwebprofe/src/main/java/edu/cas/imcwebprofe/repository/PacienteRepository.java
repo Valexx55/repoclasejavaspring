@@ -14,4 +14,11 @@ public interface PacienteRepository extends CrudRepository<Paciente, Long> {
 
 	//Crud - Create Read Update Delete 
 	//CLAB  - Creación Lectura Actualización Borrado
+	
+	//KEY WORD Queries -- Consultas por palabras clave
+	
+		//1 Obtener un listado de pacientes, que estén en un rago de edad
+	
+			public Iterable<Paciente> findByEdadBetween (int edadmin, int edadmax);
+
 }

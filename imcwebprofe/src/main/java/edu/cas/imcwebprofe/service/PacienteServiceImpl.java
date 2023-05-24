@@ -101,4 +101,15 @@ public class PacienteServiceImpl implements PacienteService{
 		return optionalPaciente;
 	}
 
+
+	@Override
+	@Transactional(readOnly = true)
+	public Iterable<Paciente> consultarPacientesPorRangoEdad(int edadmin, int edadmax) {
+		Iterable<Paciente> listaPacientes = null;
+		
+			listaPacientes = this.pacienteRepository.findByEdadBetween(edadmin, edadmax);
+		
+		return listaPacientes;
+	}
+
 }

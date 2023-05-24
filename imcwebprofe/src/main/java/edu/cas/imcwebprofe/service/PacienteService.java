@@ -25,5 +25,7 @@ public interface PacienteService {
 	Optional<Paciente> modificarPaciente (Paciente paciente, Long id);
 	
 	Paciente insertarPaciente (Paciente paciente);
+	
+	Iterable<Paciente> consultarPacientesPorRangoEdad (int edadmin, int edadmax);
 
 }
