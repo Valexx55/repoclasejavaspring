@@ -1,5 +1,6 @@
 package edu.cas.imcwebprofe.service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
@@ -110,6 +111,36 @@ public class PacienteServiceImpl implements PacienteService{
 			listaPacientes = this.pacienteRepository.findByEdadBetween(edadmin, edadmax);
 		
 		return listaPacientes;
+	}
+
+
+	@Override
+	@Transactional(readOnly = true)
+	public Iterable<Paciente> consultarPacientesPorNombreApellido(String nombre, String apellido) {
+		Iterable<Paciente> listaPacientes = null;
+		
+			listaPacientes = this.pacienteRepository.findByNombreAndApellidoIgnoreCase(nombre, apellido);
+		
+		return listaPacientes;
+	}
+	
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Iterable<Paciente> findByCreadoEnBetween(LocalDateTime fechamin, LocalDateTime fechamax) {
+		Iterable<Paciente> listaPaciente = null;
+		
+			listaPaciente = this.pacienteRepository.findByCreadoEnBetween(fechamin, fechamax);
+
+		return listaPaciente;
+}
+
+
+	@Override
+	@Transactional(readOnly = true)
+	public Iterable<Paciente> busquedaPorNombreOApellidoNativa(String patron) {
+		
+		return this.pacienteRepository.busquedaPorNombreOApellidoNativa(patron);
 	}
 
 }

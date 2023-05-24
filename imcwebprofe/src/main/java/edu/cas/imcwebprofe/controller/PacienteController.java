@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.ejb.access.EjbAccessException;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -196,6 +197,43 @@ public class PacienteController {
 			listaPacientes = this.pacienteService.consultarPacientesPorRangoEdad(edadmin, edadmax);
 			responseEntity = ResponseEntity.ok(listaPacientes);
 	
+
+		return responseEntity;
+	}
+	
+	//GET http://localhost:8081/paciente/consultar-por-nombre-apellidos?nombre=pepe&apellido=peres
+	@GetMapping("/consultar-por-nombre-apellidos")
+    public ResponseEntity<?> obtenerPacientesPorNombreApellido(@RequestParam (required = true, name = "nombre") String nombre, 
+    														   @RequestParam (required = true, name = "apellido") String apellido) {
+      ResponseEntity<?> responseEntity = null;
+      Iterable<Paciente> listaPacientes = null;
+
+        listaPacientes = this.pacienteService.consultarPacientesPorNombreApellido(nombre, apellido);
+        responseEntity = ResponseEntity.ok(listaPacientes);
+
+
+      return responseEntity;
+    }
+	
+	@GetMapping("/consultar-por-creado-en/{datemin}/{datemax}")
+	public ResponseEntity<?> consultarPacientesPorCreadoEn(@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) @PathVariable LocalDateTime datemin, 
+														   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) @PathVariable LocalDateTime datemax) {
+		ResponseEntity<?> responseEntity = null;
+		Iterable<Paciente> listaPacientes = null;
+
+			listaPacientes = this.pacienteService.findByCreadoEnBetween(datemin, datemax);
+			responseEntity = ResponseEntity.ok(listaPacientes);
+
+		return responseEntity;
+	}
+	
+	@GetMapping("/consulta-nombre-apellido-patron/{patron}")
+	public ResponseEntity<?> consultarPacientesPorCreadoEn(@PathVariable String patron) {
+		ResponseEntity<?> responseEntity = null;
+		Iterable<Paciente> listaPacientes = null;
+
+			listaPacientes = this.pacienteService.busquedaPorNombreOApellidoNativa(patron);
+			responseEntity = ResponseEntity.ok(listaPacientes);
 
 		return responseEntity;
 	}
