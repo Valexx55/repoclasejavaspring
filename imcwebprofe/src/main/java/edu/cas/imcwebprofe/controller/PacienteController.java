@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.PageRequest;
@@ -50,6 +52,8 @@ public class PacienteController {
 
 	@Autowired
 	PacienteService pacienteService;
+	
+	Logger logger = LoggerFactory.getLogger(PacienteController.class);
 
 	// CONUSLTA DE TODOS LOS PANCIENTES GET --> GET http://localhost:8081/paciente
 	@GetMapping
@@ -57,8 +61,10 @@ public class PacienteController {
 		ResponseEntity<?> responseEntity = null;
 		Iterable<Paciente> listaPaciente = null;
 
-		listaPaciente = this.pacienteService.consultarTodos();
-		responseEntity = ResponseEntity.ok(listaPaciente);
+			logger.debug("obtenerTodosLosPacientes()");
+			listaPaciente = this.pacienteService.consultarTodos();
+			responseEntity = ResponseEntity.ok(listaPaciente);
+			logger.debug("lista de pacientes " + listaPaciente);
 
 		return responseEntity;
 	}
@@ -104,6 +110,10 @@ public class PacienteController {
 		List<ObjectError> listaErrores = null;
 
 		listaErrores = bindingResult.getAllErrors();
+		listaErrores.forEach((error)->{
+										logger.error(error.toString());
+										//return 9;
+										});
 		responseEntity = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(listaErrores);
 
 		return responseEntity;
@@ -121,15 +131,18 @@ public class PacienteController {
 		// Valido Paciente
 		// si es valido, inserto
 		// si no le contesto con error
-
+		logger.debug("insertarPaciente");
 		if (bindingResult.hasErrors()) {
 			// el paciente NO es valido -400
+			logger.debug("el Paciente trae errores");
 			responseEntity = generarRespuestaConErrroesValidacion(bindingResult);
 			// responseEntity = //ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		} else {
 			// paciente OK
+			logger.debug("el Paciente es CORRECTO");
 			pacienteNuevo = this.pacienteService.insertarPaciente(paciente);
 			responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(pacienteNuevo);
+			logger.debug("el Paciente devuelto  "+ pacienteNuevo);//pacienteNuevo.toString()
 		}
 
 		return responseEntity;
