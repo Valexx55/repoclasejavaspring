@@ -296,5 +296,15 @@ public class PacienteController {
 
 		return responseEntity;
 	}
+	
+	
+	@GetMapping("/obtener-frase-chuck") // GET http://localhost:8081/paciente/obtener-frase-chuck
+	public ResponseEntity<?> obtenerFraseChuck() {
+		ResponseEntity<?> responseEntity = null;
+
+
+		
+		return responseEntity;
+	}
 
 }
