@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.expression.spel.ast.OpAnd;
 
+import edu.cas.imcwebprofe.model.FraseChuckNorris;
 import edu.cas.imcwebprofe.repository.entity.Paciente;
 
 //AQUÍ DEFINIMOS LA OPERATIVA
@@ -40,4 +41,6 @@ public interface PacienteService {
 	Iterable<Paciente> findByCreadoEnBetween(LocalDateTime fechamin, LocalDateTime fechamax);
 
 	Iterable<Paciente> busquedaPorNombreOApellidoNativa (String patron);
+	
+	Optional<FraseChuckNorris> obtenerFraseAleatoriaChuck ();
 }

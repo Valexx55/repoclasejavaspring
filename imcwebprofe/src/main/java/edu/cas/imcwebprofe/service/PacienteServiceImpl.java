@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
+import edu.cas.imcwebprofe.model.FraseChuckNorris;
 import edu.cas.imcwebprofe.repository.PacienteRepository;
 import edu.cas.imcwebprofe.repository.entity.Paciente;
 
@@ -156,6 +158,15 @@ public class PacienteServiceImpl implements PacienteService{
 	public Iterable<Paciente> consultarPacientesPorRangoEdadPaginado (int edadmin, int edadmax, Pageable pageable)
 	{
 		return this.pacienteRepository.findByEdadBetween(edadmin, edadmax, pageable);
+	}
+
+
+	@Override
+	public Optional<FraseChuckNorris> obtenerFraseAleatoriaChuck() {
+		RestTemplate restTemplate = null; 
+		//TODO completar el servicio WEB para obtener una frase del servidor
+		//de chuck y devolvérsela a nuestro cliente
+		return null;
 	}
 
 }
