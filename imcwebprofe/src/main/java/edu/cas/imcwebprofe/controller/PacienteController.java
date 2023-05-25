@@ -8,6 +8,9 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.ejb.access.EjbAccessException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -89,9 +92,9 @@ public class PacienteController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> borrarPacientePorId(@PathVariable Long id) {
 		ResponseEntity<?> responseEntity = null;
-			
-			this.pacienteService.borrarPacientePorId(id);
-			responseEntity = ResponseEntity.ok().build();
+
+		this.pacienteService.borrarPacientePorId(id);
+		responseEntity = ResponseEntity.ok().build();
 
 		return responseEntity;
 	}
@@ -187,53 +190,96 @@ public class PacienteController {
 
 		return paciente;
 	}
-	
-	//GET http://localhost:8081/paciente/conusltar-por-edad/5/50
+
+	// GET http://localhost:8081/paciente/conusltar-por-edad/5/50
 	@GetMapping("/conusltar-por-edad/{edadmin}/{edadmax}")
 	public ResponseEntity<?> obtenerPacientesPorRangoDeEdad(@PathVariable int edadmin, @PathVariable int edadmax) {
 		ResponseEntity<?> responseEntity = null;
 		Iterable<Paciente> listaPacientes = null;
 
-			listaPacientes = this.pacienteService.consultarPacientesPorRangoEdad(edadmin, edadmax);
-			responseEntity = ResponseEntity.ok(listaPacientes);
-	
+		listaPacientes = this.pacienteService.consultarPacientesPorRangoEdad(edadmin, edadmax);
+		responseEntity = ResponseEntity.ok(listaPacientes);
 
 		return responseEntity;
 	}
-	
-	//GET http://localhost:8081/paciente/consultar-por-nombre-apellidos?nombre=pepe&apellido=peres
-	@GetMapping("/consultar-por-nombre-apellidos")
-    public ResponseEntity<?> obtenerPacientesPorNombreApellido(@RequestParam (required = true, name = "nombre") String nombre, 
-    														   @RequestParam (required = true, name = "apellido") String apellido) {
-      ResponseEntity<?> responseEntity = null;
-      Iterable<Paciente> listaPacientes = null;
 
-        listaPacientes = this.pacienteService.consultarPacientesPorNombreApellido(nombre, apellido);
-        responseEntity = ResponseEntity.ok(listaPacientes);
-
-
-      return responseEntity;
-    }
-	
-	@GetMapping("/consultar-por-creado-en/{datemin}/{datemax}")
-	public ResponseEntity<?> consultarPacientesPorCreadoEn(@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) @PathVariable LocalDateTime datemin, 
-														   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) @PathVariable LocalDateTime datemax) {
+	// GET http://localhost:8081/paciente/conusltar-por-edad-paginado/5/50?size=2&page=0
+	@GetMapping("/conusltar-por-edad-paginado/{edadmin}/{edadmax}")
+	public ResponseEntity<?> obtenerPacientesPorRangoDeEdadPaginado(@PathVariable int edadmin, @PathVariable int edadmax, Pageable pageable) {
 		ResponseEntity<?> responseEntity = null;
 		Iterable<Paciente> listaPacientes = null;
 
-			listaPacientes = this.pacienteService.findByCreadoEnBetween(datemin, datemax);
-			responseEntity = ResponseEntity.ok(listaPacientes);
+		listaPacientes = this.pacienteService.consultarPacientesPorRangoEdadPaginado(edadmin, edadmax, pageable);
+		responseEntity = ResponseEntity.ok(listaPacientes);
 
 		return responseEntity;
 	}
-	
+
+	// GET
+	// http://localhost:8081/paciente/consultar-por-nombre-apellidos?nombre=pepe&apellido=peres
+	@GetMapping("/consultar-por-nombre-apellidos")
+	public ResponseEntity<?> obtenerPacientesPorNombreApellido(
+			@RequestParam(required = true, name = "nombre") String nombre,
+			@RequestParam(required = true, name = "apellido") String apellido) {
+		ResponseEntity<?> responseEntity = null;
+		Iterable<Paciente> listaPacientes = null;
+
+		listaPacientes = this.pacienteService.consultarPacientesPorNombreApellido(nombre, apellido);
+		responseEntity = ResponseEntity.ok(listaPacientes);
+
+		return responseEntity;
+	}
+
+	@GetMapping("/consultar-por-creado-en/{datemin}/{datemax}")
+	public ResponseEntity<?> consultarPacientesPorCreadoEn(
+			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) @PathVariable LocalDateTime datemin,
+			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) @PathVariable LocalDateTime datemax) {
+		ResponseEntity<?> responseEntity = null;
+		Iterable<Paciente> listaPacientes = null;
+
+		listaPacientes = this.pacienteService.findByCreadoEnBetween(datemin, datemax);
+		responseEntity = ResponseEntity.ok(listaPacientes);
+
+		return responseEntity;
+	}
+
 	@GetMapping("/consulta-nombre-apellido-patron/{patron}")
 	public ResponseEntity<?> consultarPacientesPorCreadoEn(@PathVariable String patron) {
 		ResponseEntity<?> responseEntity = null;
 		Iterable<Paciente> listaPacientes = null;
 
-			listaPacientes = this.pacienteService.busquedaPorNombreOApellidoNativa(patron);
-			responseEntity = ResponseEntity.ok(listaPacientes);
+		listaPacientes = this.pacienteService.busquedaPorNombreOApellidoNativa(patron);
+		responseEntity = ResponseEntity.ok(listaPacientes);
+
+		return responseEntity;
+	}
+
+	// GET
+	// http://localhost:8081/paciente/pagina?page=1&size=3&sort=edad,apellido,ASC
+	// GET http://localhost:8081/paciente/pagina?page=0&size=3&sort=edad,DESC
+	// GET http://localhost:8081/paciente/pagina?page=1&size=3&sort=edad,ASC
+	// GET http://localhost:8081/paciente/pagina?page=0&size=3
+	@GetMapping("/pagina")
+	public ResponseEntity<?> consultarPacientesPorPagina(Pageable pageable) {
+		ResponseEntity<?> responseEntity = null;
+		Iterable<Paciente> paginaPacientes = null;
+
+		paginaPacientes = this.pacienteService.consultarPacientesPorPaginas(pageable);
+		responseEntity = ResponseEntity.ok(paginaPacientes);
+
+		return responseEntity;
+	}
+
+	// GET http://localhost:8081/paciente/paginaParam?page=1&size=3&sort=edad,ASC
+	@GetMapping("/paginaParam")
+	public ResponseEntity<?> consultarPacientesPorPaginaParam(@RequestParam(name = "page") int page,
+			@RequestParam(name = "size") int size, @RequestParam(name = "sort") String sort) {
+		ResponseEntity<?> responseEntity = null;
+		Iterable<Paciente> paginaPacientes = null;
+
+		Pageable pageable = PageRequest.of(page, size, Sort.by(sort).ascending());
+		paginaPacientes = this.pacienteService.consultarPacientesPorPaginas(pageable);
+		responseEntity = ResponseEntity.ok(paginaPacientes);
 
 		return responseEntity;
 	}

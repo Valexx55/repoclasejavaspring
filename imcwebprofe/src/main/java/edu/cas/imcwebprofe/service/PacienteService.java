@@ -3,6 +3,8 @@ package edu.cas.imcwebprofe.service;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.expression.spel.ast.OpAnd;
 
 import edu.cas.imcwebprofe.repository.entity.Paciente;
@@ -18,6 +20,8 @@ import edu.cas.imcwebprofe.repository.entity.Paciente;
 public interface PacienteService {
 
 	Iterable<Paciente> consultarTodos();
+	
+	Iterable<Paciente> consultarPacientesPorPaginas(Pageable pagina);
 
 	Optional<Paciente> consultarPacientePorId(Long id);
 
@@ -28,6 +32,8 @@ public interface PacienteService {
 	Paciente insertarPaciente(Paciente paciente);
 
 	Iterable<Paciente> consultarPacientesPorRangoEdad(int edadmin, int edadmax);
+	
+	Iterable<Paciente> consultarPacientesPorRangoEdadPaginado (int edadmin, int edadmax, Pageable pageable);
 
 	Iterable<Paciente> consultarPacientesPorNombreApellido(String nombre, String apellido);
 

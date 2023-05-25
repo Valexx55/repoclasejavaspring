@@ -2,8 +2,11 @@ package edu.cas.imcwebprofe.repository;
 
 import java.time.LocalDateTime;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import edu.cas.imcwebprofe.repository.entity.Paciente;
@@ -13,7 +16,8 @@ import edu.cas.imcwebprofe.repository.entity.Paciente;
 //1 la deja marcada para spring --> le dice, instánciame: soy un COMPONENT!
 //2 a mí, como programador, tiene una semántica: en esta clase hay acceso a datos MYSQL
 @Repository//opcional
-public interface PacienteRepository extends CrudRepository<Paciente, Long> {
+public interface PacienteRepository extends PagingAndSortingRepository<Paciente, Long>{
+//public interface PacienteRepository extends CrudRepository<Paciente, Long> {
 
 	//Crud - Create Read Update Delete 
 	//CLAB  - Creación Lectura Actualización Borrado
@@ -28,6 +32,10 @@ public interface PacienteRepository extends CrudRepository<Paciente, Long> {
 		//1 Obtener un listado de pacientes, que estén en un rago de edad
 	
 			public Iterable<Paciente> findByEdadBetween (int edadmin, int edadmax);
+			
+			//1.1 MISMA CONSULTA, PERO PAGINADA
+			
+			public Page<Paciente> findByEdadBetween (int edadmin, int edadmax, Pageable pageable);
 			
 		//2 Consulta por nombre y apellidos
 			
