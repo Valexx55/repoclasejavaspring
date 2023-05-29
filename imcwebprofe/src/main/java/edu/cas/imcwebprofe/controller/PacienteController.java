@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import edu.cas.imcwebprofe.model.FraseChuckNorris;
 import edu.cas.imcwebprofe.repository.entity.Paciente;
 import edu.cas.imcwebprofe.service.PacienteService;
 import edu.cas.imcwebprofe.service.PacienteServiceImpl;
@@ -301,6 +302,16 @@ public class PacienteController {
 	@GetMapping("/obtener-frase-chuck") // GET http://localhost:8081/paciente/obtener-frase-chuck
 	public ResponseEntity<?> obtenerFraseChuck() {
 		ResponseEntity<?> responseEntity = null;
+		Optional<FraseChuckNorris> fOptional = null;
+		
+			fOptional = pacienteService.obtenerFraseAleatoriaChuck();
+			if (fOptional.isPresent())
+			{
+				FraseChuckNorris fraseChuckNorris = fOptional.get();
+				responseEntity = ResponseEntity.ok(fraseChuckNorris);
+			} else {
+				responseEntity = ResponseEntity.noContent().build();
+			}
 
 
 		

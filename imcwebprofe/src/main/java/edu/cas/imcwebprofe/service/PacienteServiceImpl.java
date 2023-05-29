@@ -164,9 +164,14 @@ public class PacienteServiceImpl implements PacienteService{
 	@Override
 	public Optional<FraseChuckNorris> obtenerFraseAleatoriaChuck() {
 		RestTemplate restTemplate = null; 
-		//TODO completar el servicio WEB para obtener una frase del servidor
-		//de chuck y devolvérsela a nuestro cliente
-		return null;
+		Optional<FraseChuckNorris> optionalFc = Optional.empty();
+		FraseChuckNorris fraseChuckNorris = null;
+		
+			restTemplate = new RestTemplate();
+			fraseChuckNorris =  restTemplate.getForObject(FraseChuckNorris.URL_CHUCK_NORRIS, FraseChuckNorris.class);
+			optionalFc = Optional.of(fraseChuckNorris);
+		
+		return optionalFc;
 	}
 
 }
