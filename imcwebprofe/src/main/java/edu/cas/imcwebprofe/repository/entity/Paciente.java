@@ -65,6 +65,17 @@ public class Paciente {
 		this.creadoEn = LocalDateTime.now();//fecha actual
 	}
 	
+	public Integer getFotoHashCode ()//fotoHashCode pasa a ser un atributo del JSON devuelto "flag" bandera, indicador, para saber si un registro (Paciente) tiene foto o no
+	{
+		Integer idev = null;
+		
+			if (this.foto!=null) //si el paciente actual, trae foto
+			{
+				idev = this.foto.hashCode();
+			}
+		
+		return idev;
+	}
 	
 	public LocalDateTime getCreadoEn() {
 		return creadoEn;

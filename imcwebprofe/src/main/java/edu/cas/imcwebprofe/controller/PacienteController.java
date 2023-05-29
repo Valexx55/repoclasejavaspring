@@ -1,5 +1,6 @@
 package edu.cas.imcwebprofe.controller;
 
+import java.awt.Image;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -10,13 +11,17 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.ejb.access.EjbAccessException;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -30,6 +35,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.sun.net.httpserver.Headers;
 
 import edu.cas.imcwebprofe.model.FraseChuckNorris;
 import edu.cas.imcwebprofe.repository.entity.Paciente;
@@ -174,7 +181,7 @@ public class PacienteController {
 			if (!archivo.isEmpty()) {
 				logger.debug("el paciente adjunta una foto");
 				try {
-					paciente.setFoto(archivo.getBytes());//saco la foto del mensaje y la asocio al paciente
+					paciente.setFoto(archivo.getBytes());// saco la foto del mensaje y la asocio al paciente
 					pacienteNuevo = this.pacienteService.insertarPaciente(paciente);
 					responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(pacienteNuevo);
 					logger.debug("el Paciente devuelto  " + pacienteNuevo);// pacienteNuevo.toString()
@@ -185,6 +192,30 @@ public class PacienteController {
 				} // obtengo el contenido, el array de caracteres byte [] Paciente.foto
 			}
 
+		}
+
+		return responseEntity;
+	}
+
+	@GetMapping("/obtenerFoto/{id}")
+	public ResponseEntity<?> obtenerFotoPacientePorId(@PathVariable Long id) {
+		ResponseEntity<?> responseEntity = null;
+		Optional<Paciente> optionalPaciente = null;
+		Resource imagen = null;// org.springframework.core.io.Resource con esto, representamos la foto, que es
+								// lo que va en el cuerpo como respuesta
+
+		optionalPaciente = this.pacienteService.consultarPacientePorId(id);
+		if (optionalPaciente.isPresent() && optionalPaciente.get().getFoto() != null) {
+			logger.debug("el Paciente existe y tiene foto");
+			Paciente pacienteLeido = optionalPaciente.get();
+			imagen = new ByteArrayResource(pacienteLeido.getFoto());
+			// HttpHeaders headers = new HttpHeaders();
+			// headers.add("Content-Type", "image/jpeg"); //PONEMOS MANUALMENTE EL TIPO MIME
+			// responseEntity = ResponseEntity.ok().headers(headers).body(imagen);
+			responseEntity = ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imagen);
+		} else {
+			logger.debug("el Paciente O NO existe o NO tiene foto");
+			responseEntity = ResponseEntity.noContent().build();// Build the response entity with no body.
 		}
 
 		return responseEntity;
@@ -206,6 +237,35 @@ public class PacienteController {
 			// si no 404 notFound y el body vacío
 			responseEntity = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
+
+		return responseEntity;
+	}
+
+	@PutMapping("/editarConFoto/{id}")
+	public ResponseEntity<?> modificarPacienteConFoto(@Valid Paciente paciente, @PathVariable Long id, MultipartFile archivo) throws IOException {
+		ResponseEntity<?> responseEntity = null;
+		Optional<Paciente> optionalPaciente = null;
+
+		if (!archivo.isEmpty()) {
+			try {
+				paciente.setFoto(archivo.getBytes());
+				optionalPaciente = this.pacienteService.modificarPaciente(paciente, id);
+
+				if (optionalPaciente.isPresent()) {
+					Paciente pacienteModificado = optionalPaciente.get();
+					responseEntity = ResponseEntity.ok(pacienteModificado);
+				} else {
+					// si no 404 notFound y el body vacío
+					responseEntity = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+				}
+			} catch (IOException e) {
+				logger.error("Error al tratar la foto", e);
+				throw e;
+			}
+
+		}
+		// optionalPaciente = this.pacienteService.modificarPaciente(paciente, id);
+		// si lo ha podido modifcar, 200 OK + el paciente modificado
 
 		return responseEntity;
 	}
