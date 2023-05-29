@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -17,6 +18,8 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 //ENTIDAD --> RELACIÓN CON LA BD
 //CLASE ENTITY --> ASOCIADA A UNA TABLA
@@ -41,6 +44,9 @@ public class Paciente {
 	@Max(130)
 	private int edad;//columnas del mismo nombre en la tabla pacientes
 	
+	@Lob //Large Object Binary --> Archivo
+	@JsonIgnore //el atributo foto, no lo serializes. ignorálo, no se lo damos al cliente en el JSON de respuesta
+	private byte[] foto;
 	
 	//@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "creado_en")
@@ -96,6 +102,19 @@ public class Paciente {
 	public void setEdad(int edad) {
 		this.edad = edad;
 	}
+	
+	
+	
+	public byte[] getFoto() {
+		return foto;
+	}
+
+
+	public void setFoto(byte[] foto) {
+		this.foto = foto;
+	}
+
+
 	public Paciente(Long id, String nombre, int edad) {
 		super();
 		this.id = id;

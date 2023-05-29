@@ -1,5 +1,6 @@
 package edu.cas.imcwebprofe.controller;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import edu.cas.imcwebprofe.model.FraseChuckNorris;
 import edu.cas.imcwebprofe.repository.entity.Paciente;
@@ -53,7 +55,7 @@ public class PacienteController {
 
 	@Autowired
 	PacienteService pacienteService;
-	
+
 	Logger logger = LoggerFactory.getLogger(PacienteController.class);
 
 	// CONUSLTA DE TODOS LOS PANCIENTES GET --> GET http://localhost:8081/paciente
@@ -62,10 +64,10 @@ public class PacienteController {
 		ResponseEntity<?> responseEntity = null;
 		Iterable<Paciente> listaPaciente = null;
 
-			logger.debug("obtenerTodosLosPacientes()");
-			listaPaciente = this.pacienteService.consultarTodos();
-			responseEntity = ResponseEntity.ok(listaPaciente);
-			logger.debug("lista de pacientes " + listaPaciente);
+		logger.debug("obtenerTodosLosPacientes()");
+		listaPaciente = this.pacienteService.consultarTodos();
+		responseEntity = ResponseEntity.ok(listaPaciente);
+		logger.debug("lista de pacientes " + listaPaciente);
 
 		return responseEntity;
 	}
@@ -111,10 +113,10 @@ public class PacienteController {
 		List<ObjectError> listaErrores = null;
 
 		listaErrores = bindingResult.getAllErrors();
-		listaErrores.forEach((error)->{
-										logger.error(error.toString());
-										//return 9;
-										});
+		listaErrores.forEach((error) -> {
+			logger.error(error.toString());
+			// return 9;
+		});
 		responseEntity = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(listaErrores);
 
 		return responseEntity;
@@ -143,7 +145,46 @@ public class PacienteController {
 			logger.debug("el Paciente es CORRECTO");
 			pacienteNuevo = this.pacienteService.insertarPaciente(paciente);
 			responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(pacienteNuevo);
-			logger.debug("el Paciente devuelto  "+ pacienteNuevo);//pacienteNuevo.toString()
+			logger.debug("el Paciente devuelto  " + pacienteNuevo);// pacienteNuevo.toString()
+		}
+
+		return responseEntity;
+	}
+
+	@Operation(description = "Subimos un cliente nuevo con FOTO")
+	@PostMapping("/crear-con-foto")
+	public ResponseEntity<?> insertarPacienteConFoto(@Valid Paciente paciente, BindingResult bindingResult,
+			MultipartFile archivo) throws IOException {
+		ResponseEntity<?> responseEntity = null;
+		Paciente pacienteNuevo = null;
+
+		// Valido Paciente
+		// si es valido, inserto
+		// si no le contesto con error
+		logger.debug("insertarPaciente");
+		if (bindingResult.hasErrors()) {
+			// el paciente NO es valido -400
+			logger.debug("el Paciente trae errores");
+			responseEntity = generarRespuestaConErrroesValidacion(bindingResult);
+			// responseEntity = //ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		} else {
+			// paciente OK
+			logger.debug("el Paciente es CORRECTO");
+
+			if (!archivo.isEmpty()) {
+				logger.debug("el paciente adjunta una foto");
+				try {
+					paciente.setFoto(archivo.getBytes());//saco la foto del mensaje y la asocio al paciente
+					pacienteNuevo = this.pacienteService.insertarPaciente(paciente);
+					responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(pacienteNuevo);
+					logger.debug("el Paciente devuelto  " + pacienteNuevo);// pacienteNuevo.toString()
+				} catch (IOException e) {
+					logger.error("Error al tratar la foto", e);
+					throw e;
+					// e.printStackTrace();
+				} // obtengo el contenido, el array de caracteres byte [] Paciente.foto
+			}
+
 		}
 
 		return responseEntity;
@@ -217,9 +258,11 @@ public class PacienteController {
 		return responseEntity;
 	}
 
-	// GET http://localhost:8081/paciente/conusltar-por-edad-paginado/5/50?size=2&page=0
+	// GET
+	// http://localhost:8081/paciente/conusltar-por-edad-paginado/5/50?size=2&page=0
 	@GetMapping("/conusltar-por-edad-paginado/{edadmin}/{edadmax}")
-	public ResponseEntity<?> obtenerPacientesPorRangoDeEdadPaginado(@PathVariable int edadmin, @PathVariable int edadmax, Pageable pageable) {
+	public ResponseEntity<?> obtenerPacientesPorRangoDeEdadPaginado(@PathVariable int edadmin,
+			@PathVariable int edadmax, Pageable pageable) {
 		ResponseEntity<?> responseEntity = null;
 		Iterable<Paciente> listaPacientes = null;
 
@@ -297,24 +340,20 @@ public class PacienteController {
 
 		return responseEntity;
 	}
-	
-	
+
 	@GetMapping("/obtener-frase-chuck") // GET http://localhost:8081/paciente/obtener-frase-chuck
 	public ResponseEntity<?> obtenerFraseChuck() {
 		ResponseEntity<?> responseEntity = null;
 		Optional<FraseChuckNorris> fOptional = null;
-		
-			fOptional = pacienteService.obtenerFraseAleatoriaChuck();
-			if (fOptional.isPresent())
-			{
-				FraseChuckNorris fraseChuckNorris = fOptional.get();
-				responseEntity = ResponseEntity.ok(fraseChuckNorris);
-			} else {
-				responseEntity = ResponseEntity.noContent().build();
-			}
 
+		fOptional = pacienteService.obtenerFraseAleatoriaChuck();
+		if (fOptional.isPresent()) {
+			FraseChuckNorris fraseChuckNorris = fOptional.get();
+			responseEntity = ResponseEntity.ok(fraseChuckNorris);
+		} else {
+			responseEntity = ResponseEntity.noContent().build();
+		}
 
-		
 		return responseEntity;
 	}
 
