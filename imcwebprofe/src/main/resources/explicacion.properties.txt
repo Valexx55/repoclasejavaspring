@@ -1,5 +1,9 @@
 spring.application.name=imcwebprofe #nombre de la aplicación
 server.port=8081 #donde se levanta el servidor WEB
+
+server.port=${PUERTO:0} # o la instancia se levanta en el puerto que indico con el parametro puerto
+#o si omito el parámetros, se levanta en un puerto aleatorio 0 65535
+
 spring.datasource.url=jdbc:mysql://localhost:3306/bdimcspring?serverTimezone=UTC //cadena de conexión a bd
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver //el driver
 spring.datasource.username=root #usuario
