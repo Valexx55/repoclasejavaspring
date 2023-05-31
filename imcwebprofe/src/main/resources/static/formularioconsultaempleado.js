@@ -1,3 +1,18 @@
+window.onload = iniciarPagina; //cuando se cargue la página , llamas a esta función
+
+//iniciarPagina(); //s/e se eejucta la llamada con los paréntisis en ese momento
+
+//() => {console.log("soy una función anónima");}
+
+//Esta linea falla, porque el elemento datosPaciente aún no existe
+//document.getElementById("datosPaciente").style.visibility = "hidden";
+
+function iniciarPagina ()
+{
+  console.log("pagina cargada");
+  //poner invisible el card
+  document.getElementById("datosPaciente").style.visibility = "hidden";
+}
 
 var xmlHttpRequest = new XMLHttpRequest();//ambito global
 
@@ -35,6 +50,31 @@ function procesarRespuesta ()
 		{
 			console.log("cuerpo respuesta = " + xmlHttpRequest.responseText);
 			var paciente = JSON.parse(xmlHttpRequest.responseText);
+			console.log("paciente = " + paciente);
+			//<h5 class="card-title" id="nombrepaciente">Card title</h5>
+			
+			let etiquetaH5 = document.getElementById("nombrepaciente");
+			etiquetaH5.innerHTML = paciente.nombre + " "+ paciente.apellido+ " " +paciente.edad;
+			
+			//si el paciente tiene foto,
+			if (paciente.fotoHashCode)//!=null
+			{
+				console.log("paciente con foto");
+				let urlFoto = "http://localhost:8081/paciente/obtenerFoto/"+paciente.id;
+				let imgPaciente = document.getElementById("fotoPaciente");
+				imgPaciente.src = urlFoto;
+				
+				
+			}  else
+			{
+				console.log("paciente SIN foto");
+			}
+				//ponemos img con la foto del servidor de ese paciente
+			
+			
+			
+			document.getElementById("datosPaciente").style.visibility = "visible";
+			
 			
 		} else if (xmlHttpRequest.status==204) {
 		
