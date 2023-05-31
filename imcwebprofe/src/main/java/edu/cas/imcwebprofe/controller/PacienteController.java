@@ -75,6 +75,7 @@ public class PacienteController {
 		listaPaciente = this.pacienteService.consultarTodos();
 		responseEntity = ResponseEntity.ok(listaPaciente);
 		logger.debug("lista de pacientes " + listaPaciente);
+		
 
 		return responseEntity;
 	}
