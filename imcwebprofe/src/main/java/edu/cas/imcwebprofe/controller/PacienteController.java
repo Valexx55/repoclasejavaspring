@@ -25,6 +25,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -56,6 +58,7 @@ import io.swagger.v3.oas.annotations.Operation;
 //ESTO VA LIGADO A LA DEPDECNIA DE HTTP
 
 //@Controller //le digo que esta clase, envía y recibe HTTP CON JSONES EN EL CUERPO
+@CrossOrigin(originPatterns =  {"*"}, methods = {RequestMethod.GET})
 @RestController // con esto, digo que lo que envío y recibo es el tipo MIME JSON
 @RequestMapping("/paciente") // oye, lo que sea http://localhost:8081/paciente es para esta clase!!
 public class PacienteController {
