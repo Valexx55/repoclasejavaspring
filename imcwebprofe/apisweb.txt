@@ -18,3 +18,112 @@ https://datos.madrid.es/portal/site/egob/menuitem.214413fe61bdd68a53318ba0a8a409
 https://api.chucknorris.io/
 https://opendata.aemet.es/dist/index.html
 https://breakingbadapi.com/
+
+
+
+
+
+HTML:   formularioconsultaapidogs.html
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="formularioconsultaapidogs.css"></link>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+<title>CONSULTA API PERRETES</title>
+</head>
+<body>
+	
+	<h1 class="header1">EL PARAISO CANINO</h1>
+	
+	<section class="main-section">
+		<button type="button" class="btn btn-success" onclick="buscarPerro()">DAME UN PERRO RANDOM</button>
+		
+		<div class="foto-perro-container">
+			<img id="random-foto-perro" class="card-img-top" alt="..."/>
+		</div>
+		
+	
+	</section>
+	
+	<script type="text/javascript" src="formularioconsultaapidogs.js"></script>
+</body>
+
+</html>
+
+
+CSS:  formularioconsultaapidogs.css
+
+#random-foto-perro{
+	width: 400px;
+	display: none;
+}
+
+.foto-perro-container{
+	margin-top: 30px;
+}
+
+.header1{
+	text-align: center;
+}
+
+.main-section{
+	text-align: center;
+}
+
+
+JS:    formularioconsultaapidogs.js
+
+window.onload = iniciarPagina; //cuando se cargue la página , llamas a esta función
+
+function iniciarPagina ()
+{
+	 console.log("pagina cargada");
+	 //poner invisible el card
+	 document.getElementById("datosPaciente").style.visibility = "hidden";
+}
+
+var xmlHttpRequest = new XMLHttpRequest();//ambito global
+
+function buscarPerro()
+{
+	llamadaServicioRandomDog();
+
+}
+
+function llamadaServicioRandomDog()
+{
+
+	 xmlHttpRequest.onreadystatechange = procesarRespuesta;
+	 let urlSerivicioWEb = "https://dog.ceo/api/breeds/image/random";
+	 xmlHttpRequest.open("GET", urlSerivicioWEb);
+	 xmlHttpRequest.send (null);
+  
+}
+
+
+function procesarRespuesta ()
+{ 
+	console.log (xmlHttpRequest.readyState);
+	if (xmlHttpRequest.readyState==4)
+	{
+		console.log ("el servidor ha traido la respuesta");
+		if (xmlHttpRequest.status==200)
+		{
+			console.log("cuerpo respuesta = " + xmlHttpRequest.responseText);
+			var respuestaRandomDog = JSON.parse(xmlHttpRequest.responseText);
+			
+			
+			let elementoFotoPerro = document.getElementById("random-foto-perro");
+			elementoFotoPerro.src = respuestaRandomDog.message;
+			elementoFotoPerro.style.display = "inline-block";	
+			
+		} else{
+		
+			window.alert("Ha ocurrido un error.");
+			
+		}
+	}	
+	
+}
